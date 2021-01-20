@@ -1,6 +1,6 @@
 # SQL Challenge - Completed for UC Davis's data analytics and visualization Bootcamp
 
-![sql.png](sql.png)
+Importing CSVs into PostgreSQL, along with various queries to join the tables, displaying relevant information. This was used to practice various joins, selects, group by's, etc.
 
 ## Background
 
