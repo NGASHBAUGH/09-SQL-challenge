@@ -1,4 +1,4 @@
-# SQL Homework - Employee Database: A Mystery in Two Parts
+# SQL Challenge - Completed for UC Davis's data analytics and visualization Bootcamp
 
 ![sql.png](sql.png)
 
