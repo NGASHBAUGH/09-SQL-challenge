@@ -21,6 +21,7 @@ INNER JOIN salaries ON employees.emp_no = salaries.emp_no;
 
 -- --2. List first name, last name, and hire date for 
 -- --employees who were hired in 1986.
+
 SELECT first_name , last_name , hire_date FROM employees
 WHERE hire_date >= '1986-01-01' AND hire_date <='1986-12-31';
 
@@ -36,6 +37,7 @@ Inner JOIN employees ON dept_manager.emp_no = employees.emp_no;
 
 -- -- 4. List the department of each employee with the following information: 
 -- -- employee number, last name, first name, and department name.
+
 SELECT employees.emp_no , employees.last_name , employees.first_name , departments.dept_name FROM employees
 INNER JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
 INNER JOIN departments ON departments.dept_no = dept_emp.dept_no;
@@ -43,11 +45,13 @@ INNER JOIN departments ON departments.dept_no = dept_emp.dept_no;
 
 -- --  5. List first name, last name, and sex for employees whose 
 -- -- first name is "Hercules" and last names begin with "B."
+
 SELECT employees.first_name , employees.last_name , employees.sex FROM employees
 WHERE first_name like 'Hercules' AND last_name like 'B%';
 
 -- -- 6.List all employees in the Sales department, including 
 -- --their employee number, last name, first name, and department name.
+
 SELECT employees.emp_no , employees.last_name , employees.first_name, departments.dept_name From departments
 INNER JOIN dept_emp ON dept_emp.dept_no = departments.dept_no
 INNER JOIN employees ON employees.emp_no = dept_emp.emp_no
@@ -65,6 +69,8 @@ ORDER BY employees.emp_no asc;
 
 -- --THIS checks that there are no employees that are in BOTH SALES and development
 ---First Create a view 
+
+
 CREATE VIEW seven AS 
 	SELECT dept_emp.emp_no , departments.dept_name FROM dept_emp
 	INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
