@@ -1,39 +1,89 @@
-# SQL Challenge - Completed for UC Davis's data analytics and visualization Bootcamp
+# SQL Challenge 
 
-Importing CSVs into PostgreSQL, along with various queries to join the tables, displaying relevant information. This was used to practice various joins, selects, group by's, etc.
+In this repository data was imported from CSVs into PostgreSQL, the data was organized, and various queries were used to join the tables, displaying relevant information. This was used to practice various joins, selects, group bys’, etc.
 
 #### Data Modeling
 
-Inspect the CSVs and sketch out an ERD of the tables. Feel free to use a tool like 
+Data Model of the table structure
 
 ![Model](https://github.com/NGASHBAUGH/SQL-Queries/blob/master/SQL/Table%20Layout.PNG)
 
-#### Data Engineering
-
-* Use the information you have to create a table schema for each of the six CSV files. Remember to specify data types, primary keys, foreign keys, and other constraints.
-
-  * For the primary keys check to see if the column is unique, otherwise create a [composite key](https://en.wikipedia.org/wiki/Compound_key). Which takes to primary keys in order to uniquely identify a row.
-  * Be sure to create tables in the correct order to handle foreign keys.
-
-* Import each CSV file into the corresponding SQL table. **Note** be sure to import the data in the same order that the tables were created and account for the headers when importing to avoid errors.
 
 #### Data Analysis
 
-Once you have a complete database, do the following:
+The following items are the answers using SQL queries on the database 
 
-1. List the following details of each employee: employee number, last name, first name, sex, and salary.
+-- --1. List the following details of each employee: 
+-- --employee number, last name, first name, sex, and salary.
 
-2. List first name, last name, and hire date for employees who were hired in 1986.
+SELECT  employees.emp_no , employees.last_name , employees.first_name , employees.sex , salaries.salary FROM employees
+INNER JOIN salaries ON employees.emp_no = salaries.emp_no;
 
-3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
+-- --2. List first name, last name, and hire date for 
+-- --employees who were hired in 1986.
+SELECT first_name , last_name , hire_date FROM employees
+WHERE hire_date >= '1986-01-01' AND hire_date <='1986-12-31';
 
-4. List the department of each employee with the following information: employee number, last name, first name, and department name.
 
-5. List first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B."
+-- -- 3.List the manager of each department with the following information: 
+-- --department number, department name, the manager's employee number,
+-- --last name, first name.
 
-6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
+SELECT dept_manager.dept_no , departments.dept_name , dept_manager.emp_no , employees.last_name , employees.first_name FROM dept_manager
+INNER JOIN departments ON dept_manager.dept_no = departments.dept_no
+Inner JOIN employees ON dept_manager.emp_no = employees.emp_no;
 
-7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
-8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
+-- -- 4. List the department of each employee with the following information: 
+-- -- employee number, last name, first name, and department name.
+SELECT employees.emp_no , employees.last_name , employees.first_name , departments.dept_name FROM employees
+INNER JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+INNER JOIN departments ON departments.dept_no = dept_emp.dept_no;
+
+
+-- --  5. List first name, last name, and sex for employees whose 
+-- -- first name is "Hercules" and last names begin with "B."
+SELECT employees.first_name , employees.last_name , employees.sex FROM employees
+WHERE first_name like 'Hercules' AND last_name like 'B%';
+
+-- -- 6.List all employees in the Sales department, including 
+-- --their employee number, last name, first name, and department name.
+SELECT employees.emp_no , employees.last_name , employees.first_name, departments.dept_name From departments
+INNER JOIN dept_emp ON dept_emp.dept_no = departments.dept_no
+INNER JOIN employees ON employees.emp_no = dept_emp.emp_no
+WHERE dept_name LIKE 'Sales';
+
+-- 7.List all employees in the Sales and Development departments,
+--including their employee number, last name, first name, and department name.
+
+SELECT employees.emp_no , employees.last_name , employees.first_name, departments.dept_name From departments
+INNER JOIN dept_emp ON dept_emp.dept_no = departments.dept_no
+INNER JOIN employees ON employees.emp_no = dept_emp.emp_no
+WHERE dept_name IN ('Sales', 'Development')
+ORDER BY employees.emp_no asc;
+
+
+-- --THIS checks that there are no employees that are in BOTH SALES and development
+---First Create a view 
+CREATE VIEW seven AS 
+	SELECT dept_emp.emp_no , departments.dept_name FROM dept_emp
+	INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
+	WHERE emp_no IN (
+		SELECT dept_emp.emp_no FROM dept_emp
+		GROUP BY emp_no
+		HAVING COUNT(emp_no) > 1)
+AND dept_name LIKE 'Sales' OR dept_name LIKE 'Development'
+----Use the view to check and see how many people have both departments 
+SELECT seven.emp_no FROM seven
+GROUP BY emp_no
+HAVING COUNT(emp_no) > 1;
+-----RESULT is NO one 
+
+
+-- 8. In descending order, list the frequency count of 
+-- employee last names, i.e., how many employees share each last name.
+
+SELECT last_name, COUNT(last_name) AS Count_of_Last_Name FROM employees
+GROUP BY last_name
+ORDER BY Count_of_Last_Name DESC;
 
